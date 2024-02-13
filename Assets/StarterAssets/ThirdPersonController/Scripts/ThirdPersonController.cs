@@ -14,6 +14,7 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -86,6 +87,13 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        public int maxHealth = 100;
+        public int currentHealth;
+        public int maxMana = 100;
+        public int currentMana;
+
+        public HealthBar healthBar;
+        public PatronoBar patronoBar;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -146,7 +154,12 @@ namespace StarterAssets
 #endif
 
             AssignAnimationIDs();
+            // Health
+            currentHealth = maxHealth;
+            healthBar.SetMaxHealth(maxHealth);
 
+            currentMana = maxMana;
+            patronoBar.SetMaxMana(maxMana);
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
@@ -159,6 +172,30 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            if(Input.GetKeyDown(KeyCode.O))
+            {
+                TakeDamage(20);
+            }
+
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                UsePatronoPower(20);
+            }
+        }
+
+        void TakeDamage(int damage)
+        {
+            currentHealth -= damage;
+
+            healthBar.SetHealth(currentHealth);
+        }
+
+        void UsePatronoPower(int power)
+        {
+            currentMana -= power;
+
+            patronoBar.SetMana(currentMana);
         }
 
         private void LateUpdate()
